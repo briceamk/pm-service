@@ -21,7 +21,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         logger.error("Responding with unauthorized error. Message - {}}", exception.getMessage());
-        ErrorDetails errorDetails = new ErrorDetails(401, LocalDateTime.now(), "Login et/ou mot de passe invalide!", "uri="+ request.getServletPath());
+        ErrorDetails errorDetails = new ErrorDetails(401, LocalDateTime.now(), exception.getLocalizedMessage(), "uri="+ request.getServletPath());
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String json = ow.writeValueAsString(errorDetails);
         response.setContentType("application/json");

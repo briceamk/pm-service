@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
         user.setCredentialsNonExpired(true);
         user.setAccountNonLocked(true);
         user.setAccountNonExpired(true);
-        if( user.getPermissions().stream().anyMatch(permission -> PermissionCode.ROLE_MANAGER.equals(permission.getName()) || PermissionCode.ROLE_ADMIN.equals(permission.getName())))
+        if( user.getPermissions().stream().anyMatch(permission -> PermissionCode.ROLE_MANAGER.equals(permission.getCode()) || PermissionCode.ROLE_ADMIN.equals(permission.getCode())))
             user.setEnabled(true);
         else
             user.setEnabled(false);

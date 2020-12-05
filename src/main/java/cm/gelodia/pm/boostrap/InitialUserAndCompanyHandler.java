@@ -52,7 +52,7 @@ public class InitialUserAndCompanyHandler implements ApplicationRunner {
         if(permissionService.count() == 0)  {
             Arrays.stream(rules.split(",")).forEach(rule ->
                     permissions.add(permissionService.create(
-                            Permission.builder().code(PermissionCode.valueOf(rule)).name(StringUtils.capitalize(rule.replace("ROLE_", "").toLowerCase())).build())
+                            Permission.builder().code(PermissionCode.valueOf(rule)).name(StringUtils.capitalize(rule.replace("ROLE_", "").toLowerCase().replace("_", " "))).build())
                     ));
         }
 

@@ -68,7 +68,7 @@ public class UserPrincipal implements UserDetails {
 
     public static UserPrincipal create(User user) {
         Set<GrantedAuthority> authorities = user.getPermissions().stream().map(permission
-                -> new Authority(permission.getName())).collect(Collectors.toSet());
+                -> new Authority(permission.getCode().name())).collect(Collectors.toSet());
 
         return new UserPrincipal(
                 user.getId(),
