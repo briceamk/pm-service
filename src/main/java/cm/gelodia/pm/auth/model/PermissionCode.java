@@ -1,0 +1,16 @@
+package cm.gelodia.pm.auth.model;
+
+public enum PermissionCode {
+    ROLE_ADMIN,
+    ROLE_MANAGER,
+    ROLE_APPROVER,
+    ROLE_BAYER,
+    ROLE_CATALOG_ADMIN,
+    ROLE_COST_CENTER_ADMIN,
+    ROLE_DEPARTMENT_ADMIN,
+    ROLE_SUPPLIER_ADMIN,
+    ROLE_PURCHASE_ORDER_ADMIN,
+    ROLE_USER_ADMIN,
+    ROLE_WORKFLOW_ADMIN,
+
+}
