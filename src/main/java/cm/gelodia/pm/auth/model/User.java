@@ -49,7 +49,7 @@ public class User extends DateAudit {
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "auth_users_permissions_rel",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id"))
