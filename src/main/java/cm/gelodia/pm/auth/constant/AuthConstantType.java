@@ -8,4 +8,6 @@ public class AuthConstantType {
             "/v2/api-docs/**",
             "/api/v1/companies/code/**"
     };
+
+    public static final String BCRYPT_PATTERN = "\\A\\$2(a|y|b)?\\$(\\d\\d)\\$[./0-9A-Za-z]{53}";
 }

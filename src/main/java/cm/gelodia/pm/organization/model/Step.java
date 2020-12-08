@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "organization_workflows")
+@Table(name = "organization_steps")
 public class Step  extends UserDateAudit {
 
     @Column(nullable = false, length = 4)

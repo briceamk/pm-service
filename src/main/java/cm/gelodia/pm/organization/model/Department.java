@@ -30,7 +30,12 @@ public class Department extends UserDateAudit {
     @ManyToOne
     @JoinColumn(name = "address_id") // this is the default address
     private Address address;
-    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY, orphanRemoval = true)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "organization_departments_users_rel",
+            joinColumns = @JoinColumn(name = "department_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private List<User> users;
     @OneToMany(mappedBy = "department", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Address> addresses;

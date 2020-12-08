@@ -25,10 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @Service("fileStorageService")
@@ -67,7 +64,7 @@ public class FileStorageServiceImpl implements FileStorageService {
             Files.copy(image.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
             //if product have image, we delete it
-            if(( imageResource.getImageName() != null && !imageResource.getImageName().equals(CommonConstantType.DEFAULT_PRODUCT_IMAGE_NAME)) &&
+            if(( imageResource.getImageName() != null && !imageResource.getImageName().isEmpty() && !imageResource.getImageName().equals(CommonConstantType.DEFAULT_PRODUCT_IMAGE_NAME)) &&
                     Files.exists(this.storagePath.resolve(imageResource.getImageName())))
             {
                 Files.deleteIfExists(this.storagePath.resolve(imageResource.getImageName()));
@@ -101,8 +98,9 @@ public class FileStorageServiceImpl implements FileStorageService {
         Resource resource;
         List<String> images = new ArrayList<>();
 
-        if(imageName.isEmpty())
-            throw new ResourceNotFoundException("Image not found " + imageName);
+        if(imageName ==null || imageName.isEmpty())
+            //throw new ResourceNotFoundException("Image not found " + imageName);
+            return Arrays.asList("");
         try {
             Path imagePath = this.storagePath.resolve(imageName).normalize();
             resource = new UrlResource(imagePath.toUri());

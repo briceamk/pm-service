@@ -46,9 +46,6 @@ public class User extends DateAudit {
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
-    @ManyToOne
-    @JoinColumn(name = "department_id")
-    private Department department;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "auth_users_permissions_rel",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -59,7 +56,7 @@ public class User extends DateAudit {
     public User(String id, String firstName, String lastName, String username, String email,
                 String mobile, String city, String password, Boolean accountNonExpired,
                 Boolean accountNonLocked, Boolean credentialsNonExpired, Boolean enabled,
-                Company company, Department department, Set<Permission> permissions) {
+                Company company,  Set<Permission> permissions) {
         super(id);
         this.firstName = firstName;
         this.lastName = lastName;
@@ -73,7 +70,6 @@ public class User extends DateAudit {
         this.credentialsNonExpired = credentialsNonExpired;
         this.enabled = enabled;
         this.company = company;
-        this.department = department;
         this.permissions = permissions;
     }
 }

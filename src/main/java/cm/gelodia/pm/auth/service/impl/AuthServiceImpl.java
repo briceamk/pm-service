@@ -1,6 +1,7 @@
 package cm.gelodia.pm.auth.service.impl;
 
 
+import cm.gelodia.pm.auth.constant.AuthConstantType;
 import cm.gelodia.pm.auth.model.*;
 import cm.gelodia.pm.auth.payload.ResetPassword;
 import cm.gelodia.pm.auth.payload.SignInRequest;
@@ -38,6 +39,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.Collections;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
@@ -55,6 +57,8 @@ public class AuthServiceImpl implements AuthService {
     private final MailTemplateService mailTemplateService;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider tokenProvider;
+    private final Pattern bcryptPattern = Pattern.compile(AuthConstantType.BCRYPT_PATTERN);
+
 
     @Override
     @Transactional
@@ -81,23 +85,21 @@ public class AuthServiceImpl implements AuthService {
         user.setLastName(signUpRequest.getLastName());
         user.setUsername(signUpRequest.getUsername());
         user.setEmail(signUpRequest.getEmail());
-        user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+        if(!bcryptPattern.matcher(signUpRequest.getPassword()).matches()) {
+            user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+        }else {
+            user.setPassword("{bcrypt}" +  signUpRequest.getPassword());
+        }
         user.setCompany(company);
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);
         user.setEnabled(false);
-
-
         Permission permission = permissionService.findByCode(PermissionCode.ROLE_BAYER);
-
         user.setPermissions(Collections.singleton(permission));
-
         user = userRepository.save(user);
-
         // create principal
         UserPrincipal principal = UserPrincipal.create(user);
-
         //generate verification token and save it into database
         String token = generateVerificationToken(user);
         // find mail template for success signUp

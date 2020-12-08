@@ -28,6 +28,7 @@ public class AuthAPI {
 
     @PostMapping("/sign-in")
     public ResponseEntity<?> signIn(@Valid @RequestBody SignInRequest signInRequest, BindingResult result) {
+
         ResponseEntity<?> errors = validationErrorService.process(result);
         if(errors != null)
             return errors;

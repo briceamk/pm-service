@@ -1,6 +1,7 @@
 package cm.gelodia.pm.organization.model;
 
 import cm.gelodia.pm.commons.autdit.UserDateAudit;
+import cm.gelodia.pm.company.model.Company;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "organization_departments")
+@Table(name = "organization_workflow_instances")
 public class WorkflowInstance extends UserDateAudit {
 
     @Enumerated(EnumType.STRING)
@@ -28,15 +29,19 @@ public class WorkflowInstance extends UserDateAudit {
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
+    @ManyToOne
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
 
     @Builder
     public WorkflowInstance(String id, WorkflowInstanceType type, WorkflowInstanceObject object,
-                            Workflow workflow, CostCenter costCenter, Department department) {
+                    Workflow workflow, CostCenter costCenter, Department department, Company company) {
         super(id);
         this.type = type;
         this.object = object;
         this.workflow = workflow;
         this.costCenter = costCenter;
         this.department = department;
+        this.company = company;
     }
 }

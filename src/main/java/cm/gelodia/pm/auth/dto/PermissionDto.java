@@ -18,5 +18,7 @@ public class PermissionDto implements Serializable {
 
     private String id;
     @NotEmpty(message = "name is required")
+    private String code;
+    @NotEmpty(message = "name is required")
     private String name;
 }

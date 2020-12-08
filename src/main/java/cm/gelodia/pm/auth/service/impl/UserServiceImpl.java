@@ -1,5 +1,6 @@
 package cm.gelodia.pm.auth.service.impl;
 
+import cm.gelodia.pm.auth.constant.AuthConstantType;
 import cm.gelodia.pm.auth.model.Permission;
 import cm.gelodia.pm.auth.model.PermissionCode;
 import cm.gelodia.pm.auth.model.User;
@@ -20,6 +21,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
@@ -31,6 +33,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PermissionService permissionService;
     private final PasswordEncoder passwordEncoder;
+    private final Pattern bcryptPattern = Pattern.compile(AuthConstantType.BCRYPT_PATTERN);
 
     @Override
     @Transactional
@@ -53,7 +56,12 @@ public class UserServiceImpl implements UserService {
         }
         // this will be use in case we need to send mail to user, so he ca, enable his account
         String password = user.getPassword();
-        user.setPassword(passwordEncoder.encode(password));
+        boolean test = bcryptPattern.matcher(password).matches();
+        if(!bcryptPattern.matcher(password).matches()) {
+            user.setPassword(passwordEncoder.encode(password));
+        } else {
+            user.setPassword("{bcrypt}" +  password);
+        }
 
         user.setCredentialsNonExpired(true);
         user.setAccountNonLocked(true);

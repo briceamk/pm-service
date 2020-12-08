@@ -51,7 +51,7 @@ public class UserAPI {
     }
 
     @PutMapping
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER', 'ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<?> updateUser(@CurrentPrincipal UserPrincipal principal, @Valid @RequestBody UserDto userDto, BindingResult result) {
         ResponseEntity<?> errors = validationErrorService.process(result);
         if(errors != null)
@@ -72,7 +72,7 @@ public class UserAPI {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER', 'ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     public @ResponseBody ResponseEntity<?> findAll( @CurrentPrincipal UserPrincipal principal,
             @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
             @RequestParam(value = "pageSize", required = false) Integer pageSize,
@@ -101,7 +101,7 @@ public class UserAPI {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER', 'ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<?> getUserById(@CurrentPrincipal UserPrincipal principal,
             @PathVariable String id) {
         return ResponseEntity.ok(userMapper.map(userService.findById(principal, id)));

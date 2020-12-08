@@ -99,7 +99,7 @@ public class ProductAPI {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_USER')")
-    public ResponseEntity<?> getCompanyById(@CurrentPrincipal UserPrincipal principal, @PathVariable String id) {
+    public ResponseEntity<?> getProductById(@CurrentPrincipal UserPrincipal principal, @PathVariable String id) {
         return ResponseEntity.ok(productMapper.map(productService.findById(principal, id)));
     }
 

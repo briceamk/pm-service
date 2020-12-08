@@ -52,7 +52,10 @@ public class InitialUserAndCompanyHandler implements ApplicationRunner {
         if(permissionService.count() == 0)  {
             Arrays.stream(rules.split(",")).forEach(rule ->
                     permissions.add(permissionService.create(
-                            Permission.builder().code(PermissionCode.valueOf(rule)).name(StringUtils.capitalize(rule.replace("ROLE_", "").toLowerCase().replace("_", " "))).build())
+                            Permission.builder()
+                                    .code(PermissionCode.valueOf(rule))
+                                    .name(StringUtils.capitalize(rule.replace("ROLE_", "")
+                                            .toLowerCase().replace("_", " "))).build())
                     ));
         }
 
@@ -75,8 +78,6 @@ public class InitialUserAndCompanyHandler implements ApplicationRunner {
             user.setCompany(company);
             userService.update(UserPrincipal.create(user), user);
         }
-
-
 
         log.info(">>>>>>>>>>>>>>>>> Stop loading initial Data for Company, Permission and User");
     }

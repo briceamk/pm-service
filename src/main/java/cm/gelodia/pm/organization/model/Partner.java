@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "organization_addresses")
+@Table(name = "organization_partners")
 public class Partner extends UserDateAudit {
     @Column(nullable = false, length = 8)
     private String code;

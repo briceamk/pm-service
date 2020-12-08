@@ -35,7 +35,7 @@ public class PermissionAPI {
     private final ValidationErrorService validationErrorService;
 
     @PostMapping
-    @PreAuthorize("hasPermission('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> create( @Valid @RequestBody PermissionDto permissionDto, BindingResult result) {
         ResponseEntity<?> errors = validationErrorService.process(result);
         if(errors != null)
@@ -48,7 +48,7 @@ public class PermissionAPI {
     }
 
     @PutMapping
-    @PreAuthorize("hasAnyPermission('ROLE_ADMIN','ROLE_MANAGER', 'ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<?> updatePermission( @Valid @RequestBody PermissionDto permissionDto, BindingResult result) {
         ResponseEntity<?> errors = validationErrorService.process(result);
         if(errors != null)
@@ -58,7 +58,7 @@ public class PermissionAPI {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyPermission('ROLE_ADMIN','ROLE_MANAGER', 'ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     public @ResponseBody ResponseEntity<?> findAll( 
             @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
             @RequestParam(value = "pageSize", required = false) Integer pageSize,
@@ -83,7 +83,7 @@ public class PermissionAPI {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyPermission('ROLE_ADMIN','ROLE_MANAGER', 'ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<?> getPermissionById(
             @PathVariable String id) {
         return ResponseEntity.ok(permissionMapper.map(permissionService.findById( id)));

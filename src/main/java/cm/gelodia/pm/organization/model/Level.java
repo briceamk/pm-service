@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "organization_workflows")
+@Table(name = "organization_levels")
 public class Level extends UserDateAudit {
     private BigDecimal amount;
     @ManyToOne
