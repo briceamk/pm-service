@@ -110,7 +110,7 @@ public class AddressServiceImpl implements AddressService {
         List<Address> addresses = addressRepository.findAllById(ids);
         if(addresses.size() != ids.size()) {
             log.error("some addresses does not exits!");
-            throw new ResourceNotFoundException(String.format("some addresses does not exits!"));
+            throw new ResourceNotFoundException("some addresses does not exits!");
         }
         addressRepository.deleteInBatch(addresses);
     }
