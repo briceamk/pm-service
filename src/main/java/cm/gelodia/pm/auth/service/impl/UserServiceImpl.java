@@ -56,13 +56,7 @@ public class UserServiceImpl implements UserService {
         }
         // this will be use in case we need to send mail to user, so he ca, enable his account
         String password = user.getPassword();
-        boolean test = bcryptPattern.matcher(password).matches();
-        if(!bcryptPattern.matcher(password).matches()) {
-            user.setPassword(passwordEncoder.encode(password));
-        } else {
-            user.setPassword("{bcrypt}" +  password);
-        }
-
+        user.setPassword(passwordEncoder.encode(password));
         user.setCredentialsNonExpired(true);
         user.setAccountNonLocked(true);
         user.setAccountNonExpired(true);

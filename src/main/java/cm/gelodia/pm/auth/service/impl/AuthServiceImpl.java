@@ -1,7 +1,5 @@
 package cm.gelodia.pm.auth.service.impl;
 
-
-import cm.gelodia.pm.auth.constant.AuthConstantType;
 import cm.gelodia.pm.auth.model.*;
 import cm.gelodia.pm.auth.payload.ResetPassword;
 import cm.gelodia.pm.auth.payload.SignInRequest;
@@ -29,7 +27,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,8 +36,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.Collections;
 import java.util.UUID;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -57,7 +52,6 @@ public class AuthServiceImpl implements AuthService {
     private final MailTemplateService mailTemplateService;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider tokenProvider;
-    private final Pattern bcryptPattern = Pattern.compile(AuthConstantType.BCRYPT_PATTERN);
 
 
     @Override
@@ -85,11 +79,7 @@ public class AuthServiceImpl implements AuthService {
         user.setLastName(signUpRequest.getLastName());
         user.setUsername(signUpRequest.getUsername());
         user.setEmail(signUpRequest.getEmail());
-        if(!bcryptPattern.matcher(signUpRequest.getPassword()).matches()) {
-            user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-        }else {
-            user.setPassword("{bcrypt}" +  signUpRequest.getPassword());
-        }
+        user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.setCompany(company);
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
@@ -156,9 +146,9 @@ public class AuthServiceImpl implements AuthService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String jwt = tokenProvider.generateToken(authentication);
-        SignInResponse signInResponse = tokenProvider.getUserFromToken(jwt);
-        signInResponse.setAuthorities(authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+        String accessJwt = tokenProvider.generateAccessToken(authentication);
+        String refreshJwt = tokenProvider.generateRefreshToken(authentication);
+        SignInResponse signInResponse = tokenProvider.getUserFromToken(accessJwt, refreshJwt);
         return signInResponse;
     }
 

@@ -28,9 +28,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(AppException.class)
-    protected final ResponseEntity<ErrorDetails> handleAppException(AppException e,
-                                                                            WebRequest request) {
+    @ExceptionHandler(ApplicationException.class)
+    protected final ResponseEntity<ErrorDetails> handleAppException(ApplicationException e,
+                                                                    WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 LocalDateTime.now(),  e.getLocalizedMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);

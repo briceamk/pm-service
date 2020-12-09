@@ -1,16 +1,15 @@
 package cm.gelodia.pm.auth.payload;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
-@NoArgsConstructor
-@Getter
 @Setter
+@Getter
+@Builder
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class SignInResponse {
     private String id;
     private String firstName;
@@ -20,13 +19,10 @@ public class SignInResponse {
     private String city;
     private String mobile;
     private String accessToken;
+    private String refreshToken;
     private String companyId;
     private String companyName;
     private String tokenType = "Bearer";
     private List<String> authorities;
-
-    public SignInResponse(String accessToken) {
-        this.accessToken = accessToken;
-    }
 
 }

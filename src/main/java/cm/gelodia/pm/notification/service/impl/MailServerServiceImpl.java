@@ -1,7 +1,7 @@
 package cm.gelodia.pm.notification.service.impl;
 
 import cm.gelodia.pm.auth.security.UserPrincipal;
-import cm.gelodia.pm.commons.exception.AppException;
+import cm.gelodia.pm.commons.exception.ApplicationException;
 import cm.gelodia.pm.commons.exception.BadRequestException;
 import cm.gelodia.pm.commons.exception.ResourceNotFoundException;
 import cm.gelodia.pm.notification.constant.NotificationConstantType;
@@ -79,7 +79,7 @@ public class MailServerServiceImpl implements MailServerService {
 
         } catch (Exception e) {
             log.error("error when sending the mail. invalid parameter!, {}", e.getMessage());
-            throw new AppException("Parameter are not valid " + e.getMessage());
+            throw new ApplicationException("Parameter are not valid " + e.getMessage());
         }
     }
 

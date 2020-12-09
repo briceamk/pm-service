@@ -112,14 +112,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
-    public SimpleUrlAuthenticationFailureHandler failureHandler() {
-        return new SimpleUrlAuthenticationFailureHandler("/login?error=true");
-    }
-
     public UsernamePasswordCompanyCodeAuthenticationFilter authenticationFilter() throws Exception {
         UsernamePasswordCompanyCodeAuthenticationFilter filter = new UsernamePasswordCompanyCodeAuthenticationFilter();
         filter.setAuthenticationManager(authenticationManagerBean());
-        filter.setAuthenticationFailureHandler(failureHandler());
 
         return filter;
     }
