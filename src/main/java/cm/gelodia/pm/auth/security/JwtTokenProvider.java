@@ -27,25 +27,22 @@ public class JwtTokenProvider {
 
     private KeyStore keyStore;
 
-    @PostConstruct
-    public void init() {
-        try {
-            keyStore = KeyStore.getInstance("JKS");
-            InputStream resourceAsStream = getClass().getResourceAsStream("jwt.jks");
-            keyStore.load(resourceAsStream, "Azerty!123".toCharArray());
-        } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException e) {
-            throw new ApplicationException("Error occurred when loading keystore file");
-        }
-    }
-
-    @Value("${app.jwtSecret}")
-    private String jwtSecret;
-
     @Value("${app.accessJwtExpirationInMs}")
     private int accessJwtExpirationInMs;
 
     @Value("${app.refreshJwtExpirationInMs}")
     private int refreshJwtExpirationInMs;
+
+    @PostConstruct
+    public void init() {
+        try {
+            keyStore = KeyStore.getInstance("JKS");
+            InputStream resourceAsStream = getClass().getResourceAsStream("/jwt.jks");
+            keyStore.load(resourceAsStream, "Azerty!123".toCharArray());
+        } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException e) {
+            throw new ApplicationException("Error occurred when loading keystore file");
+        }
+    }
 
     public String generateAccessToken(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
@@ -74,9 +71,17 @@ public class JwtTokenProvider {
 
     private PrivateKey getPrivateKey() {
         try {
-            return (PrivateKey) keyStore.getKey("jwt.jks", "Azerty!123".toCharArray());
+            return (PrivateKey) keyStore.getKey("jwt", "Azerty!123".toCharArray());
         }catch (KeyStoreException | NoSuchAlgorithmException  | UnrecoverableKeyException e) {
             throw new ApplicationException("Error occurred when retrieving private key from keystore");
+        }
+    }
+
+    private PublicKey getPublicKey() {
+        try {
+            return keyStore.getCertificate("jwt").getPublicKey();
+        } catch (KeyStoreException e) {
+            throw new ApplicationException("Error occured while retrieving public key from keystore");
         }
     }
 
@@ -89,22 +94,26 @@ public class JwtTokenProvider {
                 .setSubject(userPrincipal.getId())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                //.signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .signWith(getPrivateKey())
                 .compact();
     }
 
     public String getUserIdFromJWT(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getPublicKey())
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
         return claims.getSubject();
     }
 
+
     public SignInResponse getUserFromToken(String accessToken, String refreshToken) {
         SignInResponse signInResponse = new SignInResponse();
-        Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getPublicKey())
+                .build()
                 .parseClaimsJws(accessToken)
                 .getBody();
         signInResponse.setId(claims.getSubject());
@@ -126,12 +135,13 @@ public class JwtTokenProvider {
         return signInResponse;
     }
 
-    public boolean validateToken(String authToken) {
+    public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
+            Jwts.parserBuilder()
+                    .setSigningKey(getPublicKey())
+                    .build()
+                    .parseClaimsJws(token);
             return true;
-        } catch (SignatureException ex) {
-            logger.error("Invalid JWT signature");
         } catch (MalformedJwtException ex) {
             logger.error("Invalid JWT token");
         } catch (ExpiredJwtException ex) {
