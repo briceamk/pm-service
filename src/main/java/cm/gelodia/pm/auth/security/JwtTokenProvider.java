@@ -4,7 +4,6 @@ package cm.gelodia.pm.auth.security;
 import cm.gelodia.pm.auth.payload.SignInResponse;
 import cm.gelodia.pm.commons.exception.ApplicationException;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.SignatureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +16,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.*;
 import java.security.cert.CertificateException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component

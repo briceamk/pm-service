@@ -2,6 +2,7 @@ package cm.gelodia.pm.auth.security;
 
 import cm.gelodia.pm.auth.model.User;
 import cm.gelodia.pm.auth.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,19 +10,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@RequiredArgsConstructor
 @Service("userDetailsService")
 public  class CustomUserDetailsServiceImpl implements CustomUserDetailService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    public CustomUserDetailsServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
         @Override
         @Transactional
-        public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+        public UserDetails loadUserByUsername(String usernameOrEmail) {
             // Let people login with either username or email
             User user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
                     .orElseThrow(() ->
@@ -47,6 +45,7 @@ public  class CustomUserDetailsServiceImpl implements CustomUserDetailService {
 
     // This method is used by JWTAuthenticationFilter
     @Transactional
+    @Override
     public UserDetails loadUserById(String id) {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new UsernameNotFoundException("User not found with id : " + id)
